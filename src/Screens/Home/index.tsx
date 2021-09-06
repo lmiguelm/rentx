@@ -5,8 +5,20 @@ import { StatusBar } from 'expo-status-bar';
 import { Container, Header, HeaderContent, TotalCars } from './styles';
 
 import Logo from '../../assets/logo.svg';
+import { Car } from '../../components/Car';
 
 export function Home() {
+  const carDataOne = {
+    thumbnail:
+      'https://www.motortrend.com/uploads/sites/10/2018/05/2018-audi-rs5-4wd-coupe-angular-front.png',
+    brand: 'Audio',
+    name: 'RS 5 Coupé',
+    rent: {
+      period: 'Ao dia',
+      price: 120,
+    },
+  };
+
   return (
     <Container>
       <StatusBar style="light" translucent backgroundColor="transparent" />
@@ -18,6 +30,9 @@ export function Home() {
           <TotalCars>Total de 12 carros</TotalCars>
         </HeaderContent>
       </Header>
+
+      <Car data={carDataOne} />
+      <Car data={carDataOne} />
     </Container>
   );
 }
