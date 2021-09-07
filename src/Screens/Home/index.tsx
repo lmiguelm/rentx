@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { StatusBar } from 'expo-status-bar';
 
@@ -7,20 +7,33 @@ import { NavigationProps } from '../../routes/app.routes';
 
 import { CarList, Container, Header, HeaderContent, TotalCars } from './styles';
 
+import { api } from '../../services/api';
+
 import Logo from '../../assets/logo.svg';
+
 import { Car } from '../../components/Car';
+import { Loading } from '../../components/Loading';
+
+import { CarDTO } from '../../dtos/CarDTO';
 
 export function Home() {
-  const carDataOne = {
-    thumbnail:
-      'https://www.motortrend.com/uploads/sites/10/2018/05/2018-audi-rs5-4wd-coupe-angular-front.png',
-    brand: 'Audio',
-    name: 'RS 5 Coupé',
-    rent: {
-      period: 'Ao dia',
-      price: 120,
-    },
-  };
+  const [cars, setCars] = useState<CarDTO[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetchCars();
+  }, []);
+
+  async function fetchCars() {
+    try {
+      const { data } = await api.get<CarDTO[]>('/cars');
+      setCars(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const { navigate } = useNavigation<NavigationProps>();
 
@@ -40,13 +53,17 @@ export function Home() {
         </HeaderContent>
       </Header>
 
-      <CarList
-        data={[1, 2, 3, 4, 5]}
-        keyExtractor={(item) => String(item)}
-        renderItem={({ item }: any) => (
-          <Car onPress={handleNavigateToCarDetails} key={item} data={carDataOne} />
-        )}
-      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <CarList
+          data={cars}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Car onPress={handleNavigateToCarDetails} key={item.id} data={item} />
+          )}
+        />
+      )}
     </Container>
   );
 }
