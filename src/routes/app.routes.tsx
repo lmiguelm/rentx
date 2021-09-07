@@ -11,9 +11,11 @@ import { Scheduling } from '../Screens/Scheduling';
 import { SchedulingDetails } from '../Screens/SchedulingDetails';
 import { SchedulingComplete } from '../Screens/SchedulingComplete';
 
+import { CarDTO } from '../dtos/CarDTO';
+
 type RootParamList = {
   Home: undefined;
-  CarDetails: undefined;
+  CarDetails: CarDTO;
   Scheduling: undefined;
   SchedulingDetails: undefined;
   SchedulingComplete: undefined;

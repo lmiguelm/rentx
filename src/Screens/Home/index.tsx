@@ -37,8 +37,8 @@ export function Home() {
 
   const { navigate } = useNavigation<NavigationProps>();
 
-  function handleNavigateToCarDetails() {
-    navigate('CarDetails');
+  function handleNavigateToCarDetails(car: CarDTO) {
+    navigate('CarDetails', car);
   }
 
   return (
@@ -60,7 +60,7 @@ export function Home() {
           data={cars}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Car onPress={handleNavigateToCarDetails} key={item.id} data={item} />
+            <Car onPress={() => handleNavigateToCarDetails(item)} key={item.id} data={item} />
           )}
         />
       )}
