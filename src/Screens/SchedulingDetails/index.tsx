@@ -42,13 +42,22 @@ import {
 
 import { useTheme } from 'styled-components';
 
-export function SchedulesDetails() {
+import { useNavigation } from '@react-navigation/core';
+import { NavigationProps } from '../../routes/app.routes';
+
+export function SchedulingDetails() {
   const { colors } = useTheme();
+
+  const { navigate } = useNavigation<NavigationProps>();
+
+  function handleNavigateToSchedulingComplete() {
+    navigate('SchedulingComplete');
+  }
 
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => {}} />
+        <BackButton />
       </Header>
 
       <CarImages>
@@ -110,7 +119,11 @@ export function SchedulesDetails() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" onPress={() => {}} />
+        <Button
+          title="Alugar agora"
+          color={colors.succes}
+          onPress={handleNavigateToSchedulingComplete}
+        />
       </Footer>
     </Container>
   );

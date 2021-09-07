@@ -8,13 +8,21 @@ import { Container, Content, Message, Title } from './styles';
 import { StatusBar } from 'expo-status-bar';
 import { ConfirmButton } from '../../components/ConfirmButton';
 import { Footer } from './styles';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../routes/app.routes';
 
 export function SchedulingComplete() {
   const { width } = useWindowDimensions();
 
+  const { navigate } = useNavigation<NavigationProps>();
+
+  function handleNavigateToHome() {
+    navigate('Home');
+  }
+
   return (
     <Container>
-      <StatusBar style="light" />
+      <StatusBar style="light" translucent backgroundColor="transparent" />
 
       <LogoSvg width={width} />
 
@@ -30,7 +38,7 @@ export function SchedulingComplete() {
       </Content>
 
       <Footer>
-        <ConfirmButton title="Ok" />
+        <ConfirmButton title="Ok" onPress={handleNavigateToHome} />
       </Footer>
     </Container>
   );

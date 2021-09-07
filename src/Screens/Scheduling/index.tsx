@@ -20,15 +20,24 @@ import { StatusBar } from 'expo-status-bar';
 import { Button } from '../../components/Button';
 import { Calendar } from '../../components/Calendar';
 
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../routes/app.routes';
+
 export function Scheduling() {
   const { colors } = useTheme();
+
+  const { navigate } = useNavigation<NavigationProps>();
+
+  function handleNavigateToSchedulingDetails() {
+    navigate('SchedulingDetails');
+  }
 
   return (
     <Container>
       <StatusBar style="light" translucent backgroundColor="transparent" />
 
       <Header>
-        <BackButton style={{ height: 24, width: 24 }} color={colors.shape} onPress={() => {}} />
+        <BackButton color={colors.shape} />
 
         <Title>
           Escolha uma {'\n'}
@@ -56,7 +65,7 @@ export function Scheduling() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Confirmar" onPress={handleNavigateToSchedulingDetails} />
       </Footer>
     </Container>
   );

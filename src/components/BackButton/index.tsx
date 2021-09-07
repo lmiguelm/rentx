@@ -3,17 +3,23 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { Container } from './styles';
 import { useTheme } from 'styled-components';
-import { BorderlessButtonProps } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/core';
 
-interface Props extends BorderlessButtonProps {
+interface Props {
   color?: string;
 }
 
-export function BackButton({ color, ...rest }: Props) {
+export function BackButton({ color }: Props) {
   const { colors } = useTheme();
 
+  const { goBack } = useNavigation();
+
+  function handleGoBack() {
+    goBack();
+  }
+
   return (
-    <Container {...rest}>
+    <Container onPress={handleGoBack}>
       <MaterialIcons name="chevron-left" color={color ? color : colors.text} size={24} />
     </Container>
   );

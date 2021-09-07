@@ -28,13 +28,21 @@ import {
   Footer,
 } from './styles';
 import { Button } from '../../components/Button';
-import { Alert } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../routes/app.routes';
 
 export function CarDetails() {
+  const { navigate } = useNavigation<NavigationProps>();
+
+  function handleNavigateToSheduling() {
+    navigate('Scheduling');
+  }
+
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => {}} />
+        <BackButton />
       </Header>
 
       <CarImages>
@@ -74,7 +82,7 @@ export function CarDetails() {
       </Content>
 
       <Footer>
-        <Button title="Escolher período do aluguel" onPress={() => {}} />
+        <Button title="Escolher período do aluguel" onPress={handleNavigateToSheduling} />
       </Footer>
     </Container>
   );
