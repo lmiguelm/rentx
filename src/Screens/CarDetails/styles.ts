@@ -87,7 +87,7 @@ export const Accessories = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 
   margin-top: 16px;
 `;

@@ -28,6 +28,7 @@ import {
   Footer,
 } from './styles';
 import { Button } from '../../components/Button';
+import { Alert } from 'react-native';
 
 export function CarDetails() {
   return (
@@ -73,7 +74,7 @@ export function CarDetails() {
       </Content>
 
       <Footer>
-        <Button title="Escolher período do aluguel" />
+        <Button title="Escolher período do aluguel" onPress={() => {}} />
       </Footer>
     </Container>
   );
