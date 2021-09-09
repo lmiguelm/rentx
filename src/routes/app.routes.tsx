@@ -13,11 +13,16 @@ import { SchedulingComplete } from '../Screens/SchedulingComplete';
 
 import { CarDTO } from '../dtos/CarDTO';
 
+export interface SchedulingDetailsParams {
+  car: CarDTO;
+  dates: string[];
+}
+
 type RootParamList = {
   Home: undefined;
   CarDetails: CarDTO;
-  Scheduling: undefined;
-  SchedulingDetails: undefined;
+  Scheduling: CarDTO;
+  SchedulingDetails: SchedulingDetailsParams;
   SchedulingComplete: undefined;
 };
 

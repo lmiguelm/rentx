@@ -36,7 +36,7 @@ export function CarDetails() {
   const car = params as CarDTO;
 
   function handleNavigateToSheduling() {
-    navigate('Scheduling');
+    navigate('Scheduling', car);
   }
 
   return (
