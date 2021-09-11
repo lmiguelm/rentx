@@ -24,7 +24,6 @@ import { Calendar, DayProps, generateInterval, MarkedDateProps } from '../../com
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps } from '../../routes/app.routes';
 import { getPlatformDate } from '../../utils/getPlatformDate';
-import { Alert } from 'react-native';
 import { CarDTO } from '../../dtos/CarDTO';
 
 interface RentalPeriod {
@@ -45,14 +44,10 @@ export function Scheduling() {
   const { navigate } = useNavigation<NavigationProps>();
 
   function handleConfirmRental() {
-    if (!rentalPeriod.startFormated || !rentalPeriod.endFormated) {
-      Alert.alert('Selecione o intervalo para alugar!');
-    } else {
-      navigate('SchedulingDetails', {
-        car,
-        dates: Object.keys(markedDates),
-      });
-    }
+    navigate('SchedulingDetails', {
+      car,
+      dates: Object.keys(markedDates),
+    });
   }
 
   function handleChangeDate(date: any) {
@@ -113,7 +108,11 @@ export function Scheduling() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" onPress={handleConfirmRental} />
+        <Button
+          enabled={!!rentalPeriod.startFormated}
+          title="Confirmar"
+          onPress={handleConfirmRental}
+        />
       </Footer>
     </Container>
   );

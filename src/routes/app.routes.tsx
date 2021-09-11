@@ -10,6 +10,7 @@ import { Home } from '../Screens/Home';
 import { Scheduling } from '../Screens/Scheduling';
 import { SchedulingDetails } from '../Screens/SchedulingDetails';
 import { SchedulingComplete } from '../Screens/SchedulingComplete';
+import { MyCars } from '../Screens/MyCars';
 
 import { CarDTO } from '../dtos/CarDTO';
 
@@ -24,6 +25,7 @@ type RootParamList = {
   Scheduling: CarDTO;
   SchedulingDetails: SchedulingDetailsParams;
   SchedulingComplete: undefined;
+  MyCars: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootParamList>;
@@ -43,6 +45,7 @@ export function AppRoutes() {
         <Screen name="Scheduling" component={Scheduling} />
         <Screen name="SchedulingDetails" component={SchedulingDetails} />
         <Screen name="SchedulingComplete" component={SchedulingComplete} />
+        <Screen name="MyCars" component={MyCars} />
       </Navigator>
     </NavigationContainer>
   );
