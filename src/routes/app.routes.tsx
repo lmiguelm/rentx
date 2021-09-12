@@ -1,11 +1,13 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+
 import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 
 import { CarDetails } from '../Screens/CarDetails';
+import { Splash } from '../Screens/Splash';
 import { Home } from '../Screens/Home';
 import { Scheduling } from '../Screens/Scheduling';
 import { SchedulingDetails } from '../Screens/SchedulingDetails';
@@ -20,6 +22,7 @@ export interface SchedulingDetailsParams {
 }
 
 type RootParamList = {
+  Splash: undefined;
   Home: undefined;
   CarDetails: CarDTO;
   Scheduling: CarDTO;
@@ -39,7 +42,9 @@ export function AppRoutes() {
         screenOptions={{
           headerShown: false,
         }}
+        initialRouteName="Splash"
       >
+        <Screen name="Splash" component={Splash} />
         <Screen name="Home" component={Home} />
         <Screen name="CarDetails" component={CarDetails} />
         <Screen name="Scheduling" component={Scheduling} />
