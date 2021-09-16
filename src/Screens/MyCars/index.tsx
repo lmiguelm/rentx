@@ -26,6 +26,7 @@ import {
   CarFooterPeriod,
   CarFooterDate,
 } from './styles';
+import { LoadAnimation } from '../../components/LoadAnimation';
 
 interface CarProps {
   id: string;
@@ -56,6 +57,10 @@ export function MyCars() {
     }
   }
 
+  if (loading) {
+    return <LoadAnimation />;
+  }
+
   return (
     <Container>
       <StatusBar style="light" translucent backgroundColor="transparent" />
@@ -64,54 +69,47 @@ export function MyCars() {
         <BackButton color={colors.shape} />
 
         <Title>
-          Escolha uma {'\n'}
-          data de inicio e {'\n'}
-          fim do aluguel {'\n'}
+          Seus agendamentos, {'\n'}
+          estão aqui {'\n'}
         </Title>
 
         <Subtitle>Conforto segurança e praticidade.</Subtitle>
       </Header>
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <Content>
-            <Appointments>
-              <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>
-              <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
-            </Appointments>
+      <Content>
+        <Appointments>
+          <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>
+          <AppointmentsQuantity>{cars.length}</AppointmentsQuantity>
+        </Appointments>
 
-            <FlatList
-              data={cars}
-              keyExtractor={(item) => String(item.id)}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <CarWrapper>
-                  <Car key={item.id} data={item.car} />
+        <FlatList
+          data={cars}
+          keyExtractor={(item) => String(item.id)}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <CarWrapper>
+              <Car key={item.id} data={item.car} />
 
-                  <CarFooter>
-                    <CarFooterTitle>Periodo</CarFooterTitle>
+              <CarFooter>
+                <CarFooterTitle>Periodo</CarFooterTitle>
 
-                    <CarFooterPeriod>
-                      <CarFooterDate>{item.startDate}</CarFooterDate>
+                <CarFooterPeriod>
+                  <CarFooterDate>{item.startDate}</CarFooterDate>
 
-                      <AntDesign
-                        name="arrowright"
-                        size={20}
-                        color={colors.title}
-                        style={{ marginHorizontal: 10 }}
-                      />
+                  <AntDesign
+                    name="arrowright"
+                    size={20}
+                    color={colors.title}
+                    style={{ marginHorizontal: 10 }}
+                  />
 
-                      <CarFooterDate>{item.endDate}</CarFooterDate>
-                    </CarFooterPeriod>
-                  </CarFooter>
-                </CarWrapper>
-              )}
-            />
-          </Content>
-        </>
-      )}
+                  <CarFooterDate>{item.endDate}</CarFooterDate>
+                </CarFooterPeriod>
+              </CarFooter>
+            </CarWrapper>
+          )}
+        />
+      </Content>
     </Container>
   );
 }

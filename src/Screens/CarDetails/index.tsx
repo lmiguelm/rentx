@@ -1,4 +1,11 @@
 import React from 'react';
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import { Accessory } from '../../components/Accessory';
 import { BackButton } from '../../components/BackButton';
@@ -28,6 +35,8 @@ import { NavigationProps } from '../../routes/app.routes';
 
 import { CarDTO } from '../../dtos/CarDTO';
 import { getAccessoryIcons } from '../../utils/getAccessoryIcons';
+import { StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 export function CarDetails() {
   const { navigate } = useNavigation<NavigationProps>();
@@ -35,21 +44,43 @@ export function CarDetails() {
   const { params } = useRoute();
   const car = params as CarDTO;
 
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const headerStyleAnimation = useAnimatedStyle(() => {
+    return {
+      height: interpolate(scrollY.value, [0, 200], [200, 70], Extrapolate.CLAMP),
+    };
+  });
+
+  const sliderCarsStyleAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollY.value, [0, 150], [1, 0], Extrapolate.CLAMP),
+    };
+  });
+
   function handleNavigateToSheduling() {
     navigate('Scheduling', car);
   }
 
   return (
     <Container>
-      <Header>
-        <BackButton />
-      </Header>
+      <StatusBar style="dark" backgroundColor="transparent" />
 
-      <CarImages>
-        <ImageSlider imagesUrl={car.photos} />
-      </CarImages>
+      <Animated.View style={[headerStyleAnimation, styles.header]}>
+        <Header>
+          <BackButton />
+        </Header>
 
-      <Content>
+        <CarImages style={sliderCarsStyleAnimation}>
+          <ImageSlider imagesUrl={car.photos} />
+        </CarImages>
+      </Animated.View>
+
+      <Content onScroll={scrollHandler} scrollEventThrottle={16}>
         <Details>
           <Description>
             <Brand>{car.brand}</Brand>
@@ -72,7 +103,14 @@ export function CarDetails() {
           ))}
         </Accessories>
 
-        <About>{car.about}</About>
+        <About>
+          {car.about}
+          {car.about}
+          {car.about}
+          {car.about}
+          {car.about}
+          {car.about}
+        </About>
       </Content>
 
       <Footer>
@@ -81,3 +119,14 @@ export function CarDetails() {
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  header: {
+    position: 'absolute',
+    overflow: 'hidden',
+    zIndex: 1,
+  },
+  back: {
+    marginTop: 24,
+  },
+});

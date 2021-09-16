@@ -19,7 +19,7 @@ export function BackButton({ color }: Props) {
   }
 
   return (
-    <Container onPress={handleGoBack}>
+    <Container onPress={handleGoBack} style={{ height: 24, width: 24 }}>
       <MaterialIcons name="chevron-left" color={color ? color : colors.text} size={24} />
     </Container>
   );
