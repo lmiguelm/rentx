@@ -31,7 +31,6 @@ import {
 import { Button } from '../../components/Button';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { NavigationProps } from '../../routes/app.routes';
 
 import { CarDTO } from '../../dtos/CarDTO';
 import { getAccessoryIcons } from '../../utils/getAccessoryIcons';
@@ -39,7 +38,7 @@ import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 export function CarDetails() {
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   const { params } = useRoute();
   const car = params as CarDTO;

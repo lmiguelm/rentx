@@ -1,10 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { CarDetails } from '../Screens/CarDetails';
 import { Splash } from '../Screens/Splash';
@@ -13,6 +10,7 @@ import { Scheduling } from '../Screens/Scheduling';
 import { SchedulingDetails } from '../Screens/SchedulingDetails';
 import { SchedulingComplete } from '../Screens/SchedulingComplete';
 import { MyCars } from '../Screens/MyCars';
+import { SignIn } from '../Screens/SignIn';
 
 import { CarDTO } from '../dtos/CarDTO';
 
@@ -21,20 +19,23 @@ export interface SchedulingDetailsParams {
   dates: string[];
 }
 
-type RootParamList = {
-  Splash: undefined;
-  Home: undefined;
-  CarDetails: CarDTO;
-  Scheduling: CarDTO;
-  SchedulingDetails: SchedulingDetailsParams;
-  SchedulingComplete: undefined;
-  MyCars: undefined;
-};
-
-export type NavigationProps = NativeStackNavigationProp<RootParamList>;
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList {
+      Splash: undefined;
+      Home: undefined;
+      CarDetails: CarDTO;
+      Scheduling: CarDTO;
+      SchedulingDetails: SchedulingDetailsParams;
+      SchedulingComplete: undefined;
+      MyCars: undefined;
+      SignIn: undefined;
+    }
+  }
+}
 
 export function AppRoutes() {
-  const { Navigator, Screen } = createNativeStackNavigator<RootParamList>();
+  const { Navigator, Screen } = createNativeStackNavigator();
 
   return (
     <NavigationContainer>
@@ -42,8 +43,9 @@ export function AppRoutes() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="Splash"
+        initialRouteName="SignIn"
       >
+        <Screen name="SignIn" component={SignIn} />
         <Screen name="Splash" component={Splash} />
         <Screen
           name="Home"

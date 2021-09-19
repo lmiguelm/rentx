@@ -11,7 +11,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useNavigation } from '@react-navigation/core';
-import { NavigationProps } from '../../routes/app.routes';
 
 import BrandSvg from '../../assets/brand.svg';
 import LogoSvg from '../../assets/logo.svg';
@@ -19,7 +18,7 @@ import LogoSvg from '../../assets/logo.svg';
 import { Container } from './styles';
 
 export function Splash() {
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   const splashAnimation = useSharedValue(0);
 

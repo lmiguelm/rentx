@@ -36,7 +36,7 @@ import {
 import { useTheme } from 'styled-components';
 
 import { useNavigation, useRoute } from '@react-navigation/core';
-import { NavigationProps, SchedulingDetailsParams } from '../../routes/app.routes';
+import { SchedulingDetailsParams } from '../../routes/app.routes';
 
 import { format } from 'date-fns';
 
@@ -56,7 +56,7 @@ export function SchedulingDetails() {
 
   const { colors } = useTheme();
 
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
   const [loading, setLoading] = useState<boolean>(false);

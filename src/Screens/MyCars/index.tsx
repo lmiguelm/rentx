@@ -6,7 +6,6 @@ import { FlatList } from 'react-native';
 import { useTheme } from 'styled-components';
 import { BackButton } from '../../components/BackButton';
 import { Car } from '../../components/Car';
-import { Loading } from '../../components/Loading';
 
 import { CarDTO } from '../../dtos/CarDTO';
 import { api } from '../../services/api';

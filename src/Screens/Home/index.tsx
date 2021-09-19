@@ -13,7 +13,6 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useNavigation } from '@react-navigation/core';
-import { NavigationProps } from '../../routes/app.routes';
 
 import { CarList, Container, Header, HeaderContent, TotalCars } from './styles';
 
@@ -78,7 +77,7 @@ export function Home() {
     }
   }
 
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   function handleNavigateToCarDetails(car: CarDTO) {
     navigate('CarDetails', car);

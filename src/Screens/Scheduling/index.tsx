@@ -22,7 +22,6 @@ import { Button } from '../../components/Button';
 import { Calendar, DayProps, generateInterval, MarkedDateProps } from '../../components/Calendar';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { NavigationProps } from '../../routes/app.routes';
 import { getPlatformDate } from '../../utils/getPlatformDate';
 import { CarDTO } from '../../dtos/CarDTO';
 
@@ -41,7 +40,7 @@ export function Scheduling() {
   const [markedDates, setMarkedDates] = useState<MarkedDateProps>({} as MarkedDateProps);
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
 
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   function handleConfirmRental() {
     navigate('SchedulingDetails', {

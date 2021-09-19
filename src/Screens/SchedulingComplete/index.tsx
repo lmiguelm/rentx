@@ -9,12 +9,11 @@ import { StatusBar } from 'expo-status-bar';
 import { ConfirmButton } from '../../components/ConfirmButton';
 import { Footer } from './styles';
 import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '../../routes/app.routes';
 
 export function SchedulingComplete() {
   const { width } = useWindowDimensions();
 
-  const { navigate } = useNavigation<NavigationProps>();
+  const { navigate } = useNavigation();
 
   function handleNavigateToHome() {
     navigate('Home');
