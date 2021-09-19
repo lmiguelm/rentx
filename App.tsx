@@ -14,7 +14,8 @@ import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
 import { ThemeProvider } from 'styled-components/native';
 import theme from './src/styles/theme';
 
-import { AppRoutes } from './src/routes/app.routes';
+import { Routes } from './src/routes';
+import { AuthProvider } from './src/contexts/AuthContext';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -31,7 +32,9 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppRoutes />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </ThemeProvider>
   );
 }

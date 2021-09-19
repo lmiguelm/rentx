@@ -15,6 +15,7 @@ import { Container, Header, Steps, SubTitle, Title, Form, FormTitle } from './st
 
 import { SignOutSecondStepParams } from '../../../routes/app.routes';
 import { useTheme } from 'styled-components';
+import { api } from '../../../services/api';
 
 export function SignOutSecondStep() {
   const { params } = useRoute();
@@ -36,13 +37,6 @@ export function SignOutSecondStep() {
       confirmPassword: Yup.string().required('Confirmação de senha obrigatória'),
     });
 
-    const data = {
-      name,
-      email,
-      driverLicense,
-      password,
-    };
-
     try {
       await schema.validate({ password, confirmPassword });
 
@@ -50,13 +44,27 @@ export function SignOutSecondStep() {
         throw new Error('Senhas não são iguais!');
       }
 
+      const data = {
+        name,
+        email,
+        driver_license: driverLicense,
+        password,
+      };
+
+      await api.post('/users', data);
+
       navigate('Confirmation', {
         title: 'Conta criada!',
-        nextScreenRoute: 'Home',
+        nextScreenRoute: 'SignIn',
       });
     } catch (error) {
       setLoading(false);
-      Alert.alert('Ops!', error.message);
+
+      if (error instanceof Yup.ValidationError) {
+        Alert.alert('Ops!', error.message);
+      } else {
+        Alert.alert('Ops!', 'Não foi possível cadastrar');
+      }
     }
   }
 

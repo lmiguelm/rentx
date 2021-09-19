@@ -14,11 +14,12 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { FormAnimation } from '../../components/FormAnimation';
 import { FooterAnimation } from '../../components/FooterAnimation';
 import { useNavigation } from '@react-navigation/core';
+import { useAuth } from '../../hooks/auth';
 
 export function SignIn() {
   const { colors } = useTheme();
-
   const { navigate } = useNavigation();
+  const { signIn } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,7 +35,7 @@ export function SignIn() {
 
     try {
       await schema.validate({ email, password });
-      Alert.alert('Tudo certo');
+      await signIn({ email, password });
     } catch (error) {
       setLoading(false);
 
