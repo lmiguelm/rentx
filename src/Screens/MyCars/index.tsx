@@ -25,7 +25,9 @@ import {
   CarFooterPeriod,
   CarFooterDate,
 } from './styles';
+
 import { LoadAnimation } from '../../components/LoadAnimation';
+import { CarAnimation } from '../../components/Car/CarAnimation';
 
 interface CarProps {
   id: string;
@@ -86,26 +88,28 @@ export function MyCars() {
           keyExtractor={(item) => String(item.id)}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <CarWrapper>
-              <Car key={item.id} data={item.car} />
+            <CarAnimation>
+              <CarWrapper>
+                <Car key={item.id} data={item.car} />
 
-              <CarFooter>
-                <CarFooterTitle>Periodo</CarFooterTitle>
+                <CarFooter>
+                  <CarFooterTitle>Periodo</CarFooterTitle>
 
-                <CarFooterPeriod>
-                  <CarFooterDate>{item.startDate}</CarFooterDate>
+                  <CarFooterPeriod>
+                    <CarFooterDate>{item.startDate}</CarFooterDate>
 
-                  <AntDesign
-                    name="arrowright"
-                    size={20}
-                    color={colors.title}
-                    style={{ marginHorizontal: 10 }}
-                  />
+                    <AntDesign
+                      name="arrowright"
+                      size={20}
+                      color={colors.title}
+                      style={{ marginHorizontal: 10 }}
+                    />
 
-                  <CarFooterDate>{item.endDate}</CarFooterDate>
-                </CarFooterPeriod>
-              </CarFooter>
-            </CarWrapper>
+                    <CarFooterDate>{item.endDate}</CarFooterDate>
+                  </CarFooterPeriod>
+                </CarFooter>
+              </CarWrapper>
+            </CarAnimation>
           )}
         />
       </Content>

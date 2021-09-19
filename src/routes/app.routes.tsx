@@ -8,15 +8,29 @@ import { Splash } from '../Screens/Splash';
 import { Home } from '../Screens/Home';
 import { Scheduling } from '../Screens/Scheduling';
 import { SchedulingDetails } from '../Screens/SchedulingDetails';
-import { SchedulingComplete } from '../Screens/SchedulingComplete';
+import { Confirmation } from '../Screens/Confirmation';
 import { MyCars } from '../Screens/MyCars';
 import { SignIn } from '../Screens/SignIn';
+import { SignOutFirstStep } from '../Screens/SignUp/SignOutFirstStep';
+import { SignOutSecondStep } from '../Screens/SignUp/SignOutSecondStep';
 
 import { CarDTO } from '../dtos/CarDTO';
 
 export interface SchedulingDetailsParams {
   car: CarDTO;
   dates: string[];
+}
+
+export interface SignOutSecondStepParams {
+  name: string;
+  email: string;
+  driverLicense: string;
+}
+
+export interface ConfirmationParams {
+  title: string;
+  message?: string;
+  nextScreenRoute: string;
 }
 
 declare global {
@@ -27,9 +41,12 @@ declare global {
       CarDetails: CarDTO;
       Scheduling: CarDTO;
       SchedulingDetails: SchedulingDetailsParams;
-      SchedulingComplete: undefined;
+      Feedback: undefined;
       MyCars: undefined;
       SignIn: undefined;
+      SignOutFirstStep: undefined;
+      SignOutSecondStep: SignOutSecondStepParams;
+      Confirmation: ConfirmationParams;
     }
   }
 }
@@ -43,9 +60,11 @@ export function AppRoutes() {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="SignIn"
+        initialRouteName="Home"
       >
         <Screen name="SignIn" component={SignIn} />
+        <Screen name="SignOutFirstStep" component={SignOutFirstStep} />
+        <Screen name="SignOutSecondStep" component={SignOutSecondStep} />
         <Screen name="Splash" component={Splash} />
         <Screen
           name="Home"
@@ -57,7 +76,7 @@ export function AppRoutes() {
         <Screen name="CarDetails" component={CarDetails} />
         <Screen name="Scheduling" component={Scheduling} />
         <Screen name="SchedulingDetails" component={SchedulingDetails} />
-        <Screen name="SchedulingComplete" component={SchedulingComplete} />
+        <Screen name="Confirmation" component={Confirmation} />
         <Screen name="MyCars" component={MyCars} />
       </Navigator>
     </NavigationContainer>

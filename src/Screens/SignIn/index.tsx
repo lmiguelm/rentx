@@ -13,14 +13,20 @@ import { Container, Header, SubTitle, Title, Footer, Form } from './styles';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { FormAnimation } from '../../components/FormAnimation';
 import { FooterAnimation } from '../../components/FooterAnimation';
+import { useNavigation } from '@react-navigation/core';
 
 export function SignIn() {
   const { colors } = useTheme();
 
+  const { navigate } = useNavigation();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function handleSignIn() {
+    setLoading(true);
+
     const schema = Yup.object().shape({
       email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
       password: Yup.string().required('Senha obrigatória'),
@@ -30,6 +36,8 @@ export function SignIn() {
       await schema.validate({ email, password });
       Alert.alert('Tudo certo');
     } catch (error) {
+      setLoading(false);
+
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Opa!', error.message);
       } else {
@@ -39,6 +47,10 @@ export function SignIn() {
         );
       }
     }
+  }
+
+  function handleNewAccount() {
+    navigate('SignOutFirstStep');
   }
 
   return (
@@ -83,13 +95,13 @@ export function SignIn() {
                 title="Login"
                 onPress={handleSignIn}
                 enabled={email.trim().length > 0 && password.trim().length > 0}
-                loading={false}
+                loading={loading}
               />
 
               <Button
                 color={colors.background_secondary}
                 title="Criar conta gratuita"
-                onPress={() => {}}
+                onPress={handleNewAccount}
                 light
               />
             </FooterAnimation>

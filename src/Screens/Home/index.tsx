@@ -25,6 +25,7 @@ import { LoadAnimation } from '../../components/LoadAnimation';
 
 import { CarDTO } from '../../dtos/CarDTO';
 import { useTheme } from 'styled-components';
+import { CarAnimation } from '../../components/Car/CarAnimation';
 
 const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 
@@ -107,7 +108,9 @@ export function Home() {
         data={cars}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Car onPress={() => handleNavigateToCarDetails(item)} key={item.id} data={item} />
+          <CarAnimation>
+            <Car onPress={() => handleNavigateToCarDetails(item)} key={item.id} data={item} />
+          </CarAnimation>
         )}
       />
 
