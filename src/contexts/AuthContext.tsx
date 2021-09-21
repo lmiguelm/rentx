@@ -1,5 +1,9 @@
 import React, { useState, useEffect, createContext } from 'react';
+
 import { api } from '../services/api';
+
+import { database } from '../database';
+import { User as ModelUser } from '../database/models/User';
 
 interface Credentials {
   email: string;
@@ -15,15 +19,12 @@ export const AuthContext = createContext({} as AuthContextProps);
 
 interface User {
   id: string;
+  user_id: string;
   email: string;
   name: string;
   driver_license: string;
   avatar: string;
-}
-
-interface AuthState {
   token: string;
-  user: User;
 }
 
 interface AuthProviderProps {
@@ -31,25 +32,47 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [data, setData] = useState<AuthState>({} as AuthState);
+  const [data, setData] = useState<User>({} as User);
+
+  useEffect(() => {
+    async function loadUseData() {
+      const userCollection = database.get<ModelUser>('users');
+      const users = await userCollection.query().fetch();
+
+      const [user] = users;
+
+      setData(user);
+      setToken(user.token);
+    }
+    loadUseData();
+  }, []);
+
+  function setToken(token: string) {
+    api.defaults.headers.authorization = `Baerer ${token}`;
+  }
 
   async function signIn(credentials: Credentials) {
     try {
-      console.log(credentials);
+      const { data } = await api.post<User>('/sessions', credentials);
 
-      const { data } = await api.post<AuthState>('/sessions', credentials);
+      database.write(async () => {
+        await database.get<ModelUser>('users').create((newUser) => {
+          newUser.user_id = data.id;
+          newUser.name = data.name;
+          newUser.email = data.email;
+          newUser.avatar = data.avatar;
+          newUser.driver_license = data.driver_license;
+          newUser.token = data.token;
+        });
+      });
 
       setData(data);
-      console.log(data);
-
-      api.defaults.headers.authorization = `Baerer ${data.token}`;
-    } catch (error) {
+      setToken(data.token);
+    } catch (error: any) {
       console.log(error.message);
       throw new Error(error);
     }
   }
 
-  return (
-    <AuthContext.Provider value={{ user: data.user, signIn }}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user: data, signIn }}>{children}</AuthContext.Provider>;
 }
