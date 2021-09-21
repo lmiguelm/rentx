@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
@@ -16,6 +16,8 @@ import { FooterAnimation } from '../../components/FooterAnimation';
 import { useNavigation } from '@react-navigation/core';
 import { useAuth } from '../../hooks/auth';
 
+import { database } from '../../database';
+
 export function SignIn() {
   const { colors } = useTheme();
   const { navigate } = useNavigation();
@@ -24,6 +26,15 @@ export function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function loadDate() {
+      const userCollection = await database.get('users');
+      const users = await userCollection.query().fetch();
+      console.log(users);
+    }
+    loadDate();
+  }, []);
 
   async function handleSignIn() {
     setLoading(true);
