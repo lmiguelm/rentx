@@ -36,7 +36,7 @@ import {
 import { useTheme } from 'styled-components';
 
 import { useNavigation, useRoute } from '@react-navigation/core';
-import { SchedulingDetailsParams } from '../../routes/app.routes';
+import { SchedulingDetailsParams } from '../../routes';
 
 import { format } from 'date-fns';
 
@@ -44,6 +44,8 @@ import { getAccessoryIcons } from '../../utils/getAccessoryIcons';
 import { getPlatformDate } from '../../utils/getPlatformDate';
 import { api } from '../../services/api';
 import { Alert } from 'react-native';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { CarDTO } from '../../dtos/CarDTO';
 
 interface RentalPeriod {
   startFormated: string;
@@ -57,11 +59,23 @@ export function SchedulingDetails() {
   const { colors } = useTheme();
 
   const { navigate } = useNavigation();
+  const netInfo = useNetInfo();
 
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
+  const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const rentTotal = Number(dates.length * car.rent.price);
+  useEffect(() => {
+    async function fetchCarUpdated() {
+      const response = await api.get(`/cars/${car.id}`);
+      setCarUpdated(response.data);
+    }
+    if (netInfo.isConnected === true) {
+      fetchCarUpdated();
+    }
+  }, [netInfo.isConnected]);
+
+  const rentTotal = Number(dates.length * car.price);
 
   useEffect(() => {
     setRentalPeriod({
@@ -72,21 +86,14 @@ export function SchedulingDetails() {
 
   async function handleConfirmRental() {
     setLoading(true);
-    const shchedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
-
-    const unavailable_dates = [...shchedulesByCar.data.unavailable_dates, ...dates];
 
     try {
-      await api.post('schedules_byuser', {
+      await api.post('/rentals', {
         user_id: 1,
-        car,
-        startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
-        endDate: format(getPlatformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy'),
-      });
-
-      await api.put(`/schedules_bycars/${car.id}`, {
-        id: car.id,
-        unavailable_dates,
+        car_id: car.id,
+        start_date: new Date(dates[0]),
+        end_date: new Date(dates[dates.length - 1]),
+        total: rentTotal,
       });
 
       navigate('Confirmation', {
@@ -107,7 +114,11 @@ export function SchedulingDetails() {
       </Header>
 
       <CarImages>
-        <ImageSlider imagesUrl={car.photos} />
+        <ImageSlider
+          imagesUrl={
+            !!carUpdated.photos ? carUpdated.photos : [{ id: car.thumbnail, photo: car.thumbnail }]
+          }
+        />
       </CarImages>
 
       <Content>
@@ -118,20 +129,22 @@ export function SchedulingDetails() {
           </Description>
 
           <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>R$ {car.rent.price}</Price>
+            <Period>{car.period}</Period>
+            <Price>R$ {car.price}</Price>
           </Rent>
         </Details>
 
-        <Accessories>
-          {car.accessories.map((accessory) => (
-            <Accessory
-              key={accessory.type}
-              name={accessory.type}
-              icon={getAccessoryIcons(accessory.type)}
-            />
-          ))}
-        </Accessories>
+        {carUpdated.accessories && (
+          <Accessories>
+            {carUpdated.accessories.map((accessory) => (
+              <Accessory
+                key={accessory.type}
+                name={accessory.name}
+                icon={getAccessoryIcons(accessory.type)}
+              />
+            ))}
+          </Accessories>
+        )}
 
         <RentalPeriod>
           <CalendarIcon>
@@ -155,7 +168,7 @@ export function SchedulingDetails() {
           <RentalPriceLabel>TOTAL</RentalPriceLabel>
 
           <RentalPriceDetails>
-            <RentalPriceQuota>R$ {car.rent.price} x3 diárias</RentalPriceQuota>
+            <RentalPriceQuota>R$ {car.price} x3 diárias</RentalPriceQuota>
             <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
           </RentalPriceDetails>
         </RentalPrice>
