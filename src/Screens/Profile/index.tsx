@@ -42,10 +42,12 @@ import { PasswordInput } from '../../components/PasswordInput';
 
 import { useTheme } from 'styled-components';
 import { useAuth } from '../../hooks/auth';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 export function Profile() {
   const { colors } = useTheme();
   const { signOut, user, updateUser } = useAuth();
+  const netInfo = useNetInfo();
 
   const opacity = useSharedValue(0);
   const position = useSharedValue(200);
@@ -103,6 +105,10 @@ export function Profile() {
 
   function handleMenu(value: 'data' | 'password') {
     if (value === menu) return;
+
+    if (netInfo.isConnected === false && value === 'password') {
+      return Alert.alert('Você está offile', 'Para mudar a senha, conecte-se a internet');
+    }
 
     opacity.value = withSequence(withTiming(0, { duration: 0 }), withTiming(1, { duration: 1000 }));
 

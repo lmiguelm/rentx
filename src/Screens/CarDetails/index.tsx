@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 import Animated, {
   Extrapolate,
   interpolate,
@@ -26,22 +27,40 @@ import {
   About,
   Accessories,
   Footer,
+  OfflineInfo,
 } from './styles';
 
 import { Button } from '../../components/Button';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { CarDTO } from '../../dtos/CarDTO';
 import { getAccessoryIcons } from '../../utils/getAccessoryIcons';
 import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { Car as ModelCar } from '../../database/models/Car';
+import { CarDTO } from '../../dtos/CarDTO';
+import { api } from '../../services/api';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 export function CarDetails() {
   const { navigate } = useNavigation();
 
+  const netInfo = useNetInfo();
+
   const { params } = useRoute();
-  const car = params as CarDTO;
+  const car = params as ModelCar;
+
+  const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO);
+
+  useEffect(() => {
+    async function fetchCarUpdated() {
+      const response = await api.get(`/cars/${car.id}`);
+      setCarUpdated(response.data);
+    }
+    if (netInfo.isConnected === true) {
+      fetchCarUpdated();
+    }
+  }, [netInfo.isConnected]);
 
   const scrollY = useSharedValue(0);
 
@@ -62,7 +81,7 @@ export function CarDetails() {
   });
 
   function handleNavigateToSheduling() {
-    navigate('Scheduling', car);
+    navigate('Scheduling', carUpdated);
   }
 
   return (
@@ -75,7 +94,13 @@ export function CarDetails() {
         </Header>
 
         <CarImages style={sliderCarsStyleAnimation}>
-          <ImageSlider imagesUrl={car.photos} />
+          <ImageSlider
+            imagesUrl={
+              !!carUpdated.photos
+                ? carUpdated.photos
+                : [{ id: car.thumbnail, photo: car.thumbnail }]
+            }
+          />
         </CarImages>
       </Animated.View>
 
@@ -88,25 +113,37 @@ export function CarDetails() {
 
           <Rent>
             <Period>{car.period}</Period>
-            <Price>R$ {car.price}</Price>
+            <Price>R$ {netInfo.isConnected === true ? car.price : '...'}</Price>
           </Rent>
         </Details>
 
-        <Accessories>
-          {car.accessories.map((accessory) => (
-            <Accessory
-              key={accessory.type}
-              name={accessory.name}
-              icon={getAccessoryIcons(accessory.type)}
-            />
-          ))}
-        </Accessories>
+        {carUpdated.accessories && (
+          <Accessories>
+            {carUpdated.accessories.map((accessory) => (
+              <Accessory
+                key={accessory.type}
+                name={accessory.name}
+                icon={getAccessoryIcons(accessory.type)}
+              />
+            ))}
+          </Accessories>
+        )}
 
         <About>{car.about}</About>
       </Content>
 
       <Footer>
-        <Button title="Escolher período do aluguel" onPress={handleNavigateToSheduling} />
+        <Button
+          title="Escolher período do aluguel"
+          onPress={handleNavigateToSheduling}
+          enabled={netInfo.isConnected === true}
+        />
+
+        {netInfo.isConnected === false && (
+          <OfflineInfo>
+            Conecte-se a internet para ver mais detalhes e agendar seu carro
+          </OfflineInfo>
+        )}
       </Footer>
     </Container>
   );
