@@ -7,7 +7,6 @@ import { useTheme } from 'styled-components';
 import { BackButton } from '../../components/BackButton';
 import { Car } from '../../components/Car';
 
-import { CarDTO } from '../../dtos/CarDTO';
 import { api } from '../../services/api';
 
 import {
@@ -30,6 +29,7 @@ import { LoadAnimation } from '../../components/LoadAnimation';
 import { CarAnimation } from '../../components/Car/CarAnimation';
 import { Car as ModelCar } from '../../database/models/Car';
 import { format, parseISO } from 'date-fns';
+import { useIsFocused } from '@react-navigation/core';
 
 interface DataProps {
   id: string;
@@ -44,15 +44,18 @@ export function MyCars() {
   const [cars, setCars] = useState<DataProps[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const screenIsFocus = useIsFocused();
+
   useEffect(() => {
     fetchCars();
-  }, []);
+  }, [screenIsFocus]);
 
   async function fetchCars() {
     try {
       const response = await api.get('/rentals');
 
       const dataFormated = response.data.map((data: DataProps) => ({
+        id: data.id,
         car: data.car,
         start_date: format(parseISO(data.start_date), 'dd/MM/yyyy'),
         end_date: format(parseISO(data.end_date), 'dd/MM/yyyy'),
