@@ -12,11 +12,11 @@ export const carSchema = tableSchema({
       type: 'string',
     },
     {
-      name: 'fuel_type',
+      name: 'about',
       type: 'string',
     },
     {
-      name: 'about',
+      name: 'fuel_type',
       type: 'string',
     },
     {

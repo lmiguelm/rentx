@@ -12,6 +12,7 @@ interface Credentials {
 
 interface AuthContextProps {
   user: User;
+  loading: boolean;
   signIn: (credentials: Credentials) => Promise<void>;
   signOut: () => Promise<void>;
   updateUser: (user: User) => Promise<void>;
@@ -35,6 +36,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [data, setData] = useState<User>({} as User);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadUseData() {
@@ -43,6 +45,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (user) {
         setData(user);
         setToken(user.token);
+        setLoading(false);
       }
     }
     loadUseData();
@@ -120,7 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user: data, signIn, signOut, updateUser }}>
+    <AuthContext.Provider value={{ user: data, signIn, signOut, updateUser, loading }}>
       {children}
     </AuthContext.Provider>
   );

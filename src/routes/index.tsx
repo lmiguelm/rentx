@@ -7,6 +7,9 @@ import { useAuth } from '../hooks/auth';
 import { AppTabRoutes } from './app.tabs.routes';
 import { AuthRoutes } from './auth.routes';
 
+import { Car } from '../database/models/Car';
+import { LoadAnimation } from '../components/LoadAnimation';
+
 export interface SchedulingDetailsParams {
   car: CarDTO;
   dates: string[];
@@ -29,7 +32,7 @@ declare global {
     interface RootParamList {
       Splash: undefined;
       Home: undefined;
-      CarDetails: CarDTO;
+      CarDetails: Car;
       Scheduling: CarDTO;
       SchedulingDetails: SchedulingDetailsParams;
       Feedback: undefined;
@@ -43,7 +46,11 @@ declare global {
 }
 
 export function Routes() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
-  return <NavigationContainer>{user.id ? <AppTabRoutes /> : <AuthRoutes />}</NavigationContainer>;
+  if (loading) {
+    return <LoadAnimation />;
+  } else {
+    return <NavigationContainer>{user.id ? <AppTabRoutes /> : <AuthRoutes />}</NavigationContainer>;
+  }
 }
