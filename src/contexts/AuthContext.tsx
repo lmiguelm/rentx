@@ -13,6 +13,8 @@ interface Credentials {
 interface AuthContextProps {
   user: User;
   signIn: (credentials: Credentials) => Promise<void>;
+  signOut: () => Promise<void>;
+  updateUser: (user: User) => Promise<void>;
 }
 
 export const AuthContext = createContext({} as AuthContextProps);
@@ -36,43 +38,90 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     async function loadUseData() {
-      const userCollection = database.get<ModelUser>('users');
-      const users = await userCollection.query().fetch();
+      const [user] = await database.get<ModelUser>('users').query().fetch();
 
-      const [user] = users;
-
-      setData(user);
-      setToken(user.token);
+      if (user) {
+        setData(user);
+        setToken(user.token);
+      }
     }
     loadUseData();
   }, []);
 
-  function setToken(token: string) {
+  function setToken(token: string | null) {
     api.defaults.headers.authorization = `Baerer ${token}`;
   }
 
   async function signIn(credentials: Credentials) {
     try {
-      const { data } = await api.post<User>('/sessions', credentials);
+      const { data } = await api.post('/sessions', credentials);
 
-      database.write(async () => {
-        await database.get<ModelUser>('users').create((newUser) => {
-          newUser.user_id = data.id;
-          newUser.name = data.name;
-          newUser.email = data.email;
-          newUser.avatar = data.avatar;
-          newUser.driver_license = data.driver_license;
-          newUser.token = data.token;
+      const { user, token } = data;
+
+      await database.write(async () => {
+        const userCreated = await database.get<ModelUser>('users').create((newUser) => {
+          newUser.user_id = user.id;
+          newUser.name = user.name;
+          newUser.email = user.email;
+          newUser.avatar = user.avatar;
+          newUser.driver_license = user.driver_license;
+          newUser.token = token;
         });
-      });
 
-      setData(data);
-      setToken(data.token);
+        setData({
+          id: userCreated.id,
+          user_id: userCreated.user_id,
+          avatar: userCreated.avatar,
+          name: userCreated.name,
+          token: userCreated.token,
+          driver_license: userCreated.driver_license,
+          email: userCreated.email,
+        });
+
+        setToken(token);
+      });
     } catch (error: any) {
       console.log(error.message);
       throw new Error(error);
     }
   }
 
-  return <AuthContext.Provider value={{ user: data, signIn }}>{children}</AuthContext.Provider>;
+  async function signOut() {
+    try {
+      await database.write(async () => {
+        const user = await database.get<ModelUser>('users').find(data.id);
+        await user.destroyPermanently();
+      });
+
+      setData({} as User);
+      setToken(null);
+    } catch (error: any) {
+      console.log(error);
+      throw new Error(error);
+    }
+  }
+
+  async function updateUser(user: User) {
+    try {
+      await database.write(async () => {
+        const userSelected = await database.get<ModelUser>('users').find(user.id);
+
+        await userSelected.update((userData) => {
+          (userData.name = user.name),
+            (userData.driver_license = user.driver_license),
+            (userData.avatar = user.avatar);
+        });
+      });
+
+      setData(user);
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
+  return (
+    <AuthContext.Provider value={{ user: data, signIn, signOut, updateUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
