@@ -36,17 +36,16 @@ import {
   Footer,
 } from './styles';
 
-import { useTheme } from 'styled-components';
-import { useAuth } from '../../hooks/auth';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { PasswordInput } from '../../components/PasswordInput';
-import { useNavigation } from '@react-navigation/core';
+
+import { useTheme } from 'styled-components';
+import { useAuth } from '../../hooks/auth';
 
 export function Profile() {
   const { colors } = useTheme();
   const { signOut, user, updateUser } = useAuth();
-  const { navigate } = useNavigation();
 
   const opacity = useSharedValue(0);
   const position = useSharedValue(200);
