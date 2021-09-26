@@ -45,8 +45,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (user) {
         setData(user);
         setToken(user.token);
-        setLoading(false);
       }
+      setLoading(false);
     }
     loadUseData();
   }, []);

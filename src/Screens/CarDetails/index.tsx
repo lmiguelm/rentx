@@ -41,6 +41,7 @@ import { Car as ModelCar } from '../../database/models/Car';
 import { CarDTO } from '../../dtos/CarDTO';
 import { api } from '../../services/api';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { Car as ParamsCar } from '../../routes';
 
 export function CarDetails() {
   const { navigate } = useNavigation();
@@ -48,7 +49,7 @@ export function CarDetails() {
   const netInfo = useNetInfo();
 
   const { params } = useRoute();
-  const car = params as ModelCar;
+  const { car } = params as ParamsCar;
 
   const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO);
 

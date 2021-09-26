@@ -7,7 +7,7 @@ import { useAuth } from '../hooks/auth';
 import { AppTabRoutes } from './app.tabs.routes';
 import { AuthRoutes } from './auth.routes';
 
-import { Car } from '../database/models/Car';
+import { Car as ModelCar } from '../database/models/Car';
 import { LoadAnimation } from '../components/LoadAnimation';
 
 export interface SchedulingDetailsParams {
@@ -25,6 +25,10 @@ export interface ConfirmationParams {
   title: string;
   message?: string;
   nextScreenRoute: string;
+}
+
+export interface Car {
+  car: ModelCar;
 }
 
 declare global {

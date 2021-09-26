@@ -61,7 +61,7 @@ export function Home() {
   }, [netInfo.isConnected]);
 
   function handleNavigateToCarDetails(car: ModelCar) {
-    navigate('CarDetails', car);
+    navigate('CarDetails', { car });
   }
 
   async function offlineSynchronize() {
